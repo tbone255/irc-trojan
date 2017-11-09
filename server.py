@@ -37,20 +37,25 @@ def on_join(_server, event):
     read(_server)
 
 def on_disconnect(_server, event):
-    sys.exit("Disconnected!")
+    sys.exit('Disconnected!')
 
 def on_msg(_server, event):
-    print (event.source).split("!")[0] + ": " str(event.arguments[0])
+	
+    print (event.source).split('!')[0] + ': ' str(event.arguments[0])
     
-def read(_server):
-    while True:
-    	reactor.process_once()
-        msg = raw_input(USERNAME + ": ")
-        if msg.lower() == '/quit':
-            _server.quit()
-            break
-        else:
-            _server.privmsg(channel, msg)
+def check_msg(msg):
+    if msg.contains('crash'):
+	print 'crashed'
+	
+#def read(_server):
+ #   while True:
+ #   	reactor.process_once()
+ #       msg = raw_input(USERNAME + ': ')
+ #       if msg.lower() == '/quit':
+ #           _server.quit()
+ #           break
+  #      else:
+  #          _server.privmsg(channel, msg)
 
         
 def main():
