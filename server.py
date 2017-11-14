@@ -40,12 +40,18 @@ def on_disconnect(_server, event):
     sys.exit('Disconnected!')
 
 def on_msg(_server, event):
-	
     print (event.source).split('!')[0] + ': ' str(event.arguments[0])
     
 def check_msg(msg):
-    if msg.contains('crash'):
-	print 'crashed'
+    command = msg.split(' ')
+    size = len(command)
+    if size > 0:
+    	if command[0] == 'cmd':
+	    	if command[1] == 'crash':
+				crash()
+				#else raise or break
+    else:
+        return
 	
 #def read(_server):
  #   while True:
